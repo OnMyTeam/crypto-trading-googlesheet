@@ -3,7 +3,7 @@
 
 ---
 
-## 🚀 엔드포인트
+## API명세
 
 ### 1. 매매내역 저장
 **`POST /googlesheet/write/`**
