@@ -13,70 +13,8 @@ const auth = new google.auth.GoogleAuth({
 });
 
 
-var sheetName = "";
+var sheetName = new Date().toISOString().split("T")[0];
 console.log("KEYFILEPATH   ", KEYFILEPATH);
-// 모든 유저 정보 조회
-exports.getUserAll = (req, res, next) => {
-
-    // requset Info
-    // DBInfo
-    const conn = database.connectDB();
-    const query = userQuery.getUserAll()
-    conn.connect(function (err) {
-        if (err) {
-            res.status(400).send({
-                status: 0,
-                message: err
-            })
-        }
-        conn.query(query, function (err, result, fields) {
-            if (err) {
-                res.status(400).send({
-                    status: 0,
-                    message: err
-                })
-            }
-            console.log(fields)
-            res.status(200).send({
-                status: 1,
-                result: result
-            })
-        });
-    });
-}
-
-
-// 특정 유저 정보 조회
-exports.getUser = (req, res, next) => {
-    // res.header("Access-Control-Allow-Origin","*");
-    // requset Info
-    const id = req.params.id;
-    // DBInfo
-    const conn = database.connectDB();
-    const query = userQuery.getUser(id);
-    conn.connect(function (err) {
-        if (err) {
-            res.status(400).send({
-                status: 0,
-                message: err
-            })
-        }
-
-        conn.query(query, function (err, result, fields) {
-            if (err) {
-                res.status(400).send({
-                    status: 0,
-                    message: err
-                })
-            }
-            console.log(fields)
-            res.status(200).send({
-                status: 1,
-                result: result
-            })
-        });
-    });
-}
 
 // 매매내역 저장
 exports.write = (req, res, next) => {
@@ -97,8 +35,7 @@ async function addData(params) {
 
     // 오늘 날짜를 시트 이름으로
     const today = new Date();
-    const _sheetName = today.toISOString().split("T")[0]; // 예: "2025-08-23"
-
+    const _sheetName = today.toISOString().split("T")[0];
     //  새 시트 추가 요청
     if (sheetName != _sheetName) {
         sheetName = _sheetName;
@@ -148,9 +85,6 @@ async function addData(params) {
         console.log(`✅ 새 시트 추가됨: ${sheetName}`);
     }
 
-    console.log("params.uuid   ", params.uuid);
-    console.log("params.side   ", params.side);
-    console.log("params.ord_type   ", params.ord_type);
     // // 새 시트에 데이터 작성
     await sheets.spreadsheets.values.append({
         spreadsheetId: SPREADSHEET_ID,
