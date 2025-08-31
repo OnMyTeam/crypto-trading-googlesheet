@@ -13,7 +13,7 @@ const auth = new google.auth.GoogleAuth({
 });
 
 
-var sheetName = new Date().toISOString().split("T")[0];
+var sheetName = ""
 console.log("KEYFILEPATH   ", KEYFILEPATH);
 
 // 매매내역 저장
