@@ -17,14 +17,19 @@ var sheetName = ""
 console.log("KEYFILEPATH   ", KEYFILEPATH);
 
 // 매매내역 저장
-exports.write = (req, res, next) => {
+exports.write = async (req, res, next) => {
     
-    addData(req.body).catch(console.error);
-
-
-    res.status(200).send({
-        status: 1
-    })
+    try {
+        await addData(req.body);
+        res.status(200).send({
+            status: 1
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: 0,
+            err: error.toString(),
+        })
+    }
 }
 
 
@@ -76,7 +81,13 @@ async function addData(params) {
                         "paid_fee",
                         "locked",
                         "executed_volume",
-                        "trades_count"
+                        "trades_count",
+                        "token_price", // 매수 또는 매도한 코인 가격,
+                        "profit", // 수익금
+                        "profit_rate", // 수익률
+                        "cumulative_profit", // 누적 수익금
+                        "cumulative_profit_rate", // 누적 수익률
+
                     ]
                 ],
             },
@@ -107,7 +118,12 @@ async function addData(params) {
                     params.paid_fee,
                     params.locked,
                     params.executed_volume,
-                    params.trades_count
+                    params.trades_count,
+                    params.token_price, // 매수 또는 매도한 코인 가격,
+                    params.profit, // 수익금
+                    params.profit_rate, // 수익률
+                    params.cumulative_profit, // 누적 수익금
+                    params.cumulative_profit_rate, // 누적 수익률
                 ]
             ],
         },
